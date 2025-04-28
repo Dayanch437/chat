@@ -5,9 +5,10 @@ from .forms import *
 # Create your views here.
 
 
+@login_required
 def chat_view(request):
-    chat_group = get_object_or_404(ChatGroup, group_name='gep')
-    chat_messages = chat_group.chat_messages.all().order_by('created')[:30]
+    chat_group = get_object_or_404(ChatGroup, group_name='public-chat')
+    chat_messages = chat_group.chat_messages.all()
     form = ChatMessageCreateForm()
     if request.htmx:
         form = ChatMessageCreateForm(request.POST)
