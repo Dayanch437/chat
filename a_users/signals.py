@@ -7,7 +7,6 @@ from .models import Profile
 @receiver(post_save, sender=User)       
 def user_postsave(sender, instance, created, **kwargs):
     user = instance
-    
     # add profile if user is created
     if created:
         Profile.objects.create(
@@ -29,8 +28,7 @@ def user_postsave(sender, instance, created, **kwargs):
                 primary = True,
                 verified = False
             )
-        
-        
+
 @receiver(pre_save, sender=User)
 def user_presave(sender, instance, **kwargs):
     if instance.username:
