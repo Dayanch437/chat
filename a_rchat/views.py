@@ -8,7 +8,8 @@ from .forms import *
 
 @login_required
 def chat_view(request,chatroom_name='public-chat'):
-    chat_group = get_object_or_404(ChatGroup, group_name='public-chat')
+
+    chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
     chat_messages = chat_group.chat_messages.all()[:30]
     form = ChatMessageCreateForm()
 
@@ -33,6 +34,7 @@ def chat_view(request,chatroom_name='public-chat'):
                 'message': message,
                 'user':request.user,
             }
+
             return render(request, 'a_rchat/partials/chat_message_p.html', context)
 
     context = {

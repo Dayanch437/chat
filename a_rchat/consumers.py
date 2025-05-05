@@ -70,7 +70,7 @@ class ChatroomConsumer(WebsocketConsumer):
 
 
     def update_online_count(self):
-        online_count = self.chatroom.users_online.count()-1
+        online_count = self.chatroom.users_online.count()
         print (online_count)
         event = {
             'type':'online_count_handler',
@@ -80,7 +80,7 @@ class ChatroomConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_send)(self.chatroom_name,event)
 
     def online_count_handler(self, event):
-        online_count = event['online_count']
+        online_count = event['online_count'] -1
         html = render_to_string("a_rchat/partials/online_count.html",{'online_count':online_count})
         self.send(text_data=html)
 
