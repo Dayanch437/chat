@@ -19,7 +19,7 @@ class ChatroomConsumer(WebsocketConsumer):
             self.chatroom_name,self.channel_name
         )
 
-        if self.user not in self.chatroom.users_online.all():
+        if self.user not in self.chatroom.users_online:
             self.chatroom.users_online.add(self.user)
             self.update_online_count()
 

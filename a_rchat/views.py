@@ -66,3 +66,18 @@ def get_or_create_chatroom(request,username):
         chatroom.members.add(other_user, request.user)
 
     return redirect('chatroom',chatroom_name=chatroom.group_name)
+
+def create_chatgroup(request):
+    form = NewGroupForm()
+    context = {
+        'form':form,
+    }
+    if request.method == 'POST':
+        form = NewGroupForm(request.POST)
+        if form.is_valid():
+            new_group = form.save(commit=False)
+            new_group.admin = request.user
+            new_group.save()
+            new_group.members.add(request.user)
+            return redirect('chatroom',new_group.group_name)
+    return render(request,'a_rchat/create_groupchat.html',context)
