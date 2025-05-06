@@ -22,6 +22,9 @@ def chat_view(request,chatroom_name='public-chat'):
                 other_user = member
                 break
 
+    if chat_group.groupchat_name:
+        if request.user not in chat_group.members.all():
+            chat_group.members.add(request.user)
 
     if request.htmx:
         form = ChatMessageCreateForm(request.POST)
@@ -38,6 +41,7 @@ def chat_view(request,chatroom_name='public-chat'):
             return render(request, 'a_rchat/partials/chat_message_p.html', context)
 
     context = {
+        'chat_group':chat_group,
         'chat_messages': chat_messages,
         'form': form,
         'chatroom_name':chatroom_name,
@@ -46,6 +50,7 @@ def chat_view(request,chatroom_name='public-chat'):
     return render(request, 'a_rchat/chat.html',context)
 
 
+@login_required
 def get_or_create_chatroom(request,username):
     if request.user.username == username:
         return redirect('home')
@@ -67,6 +72,9 @@ def get_or_create_chatroom(request,username):
 
     return redirect('chatroom',chatroom_name=chatroom.group_name)
 
+
+
+@login_required
 def create_chatgroup(request):
     form = NewGroupForm()
     context = {

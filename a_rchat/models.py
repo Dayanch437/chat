@@ -4,9 +4,9 @@ import shortuuid
 
 class ChatGroup(models.Model):
     group_name = models.CharField(max_length=100,unique=True,default=shortuuid.uuid)
-    admin = models.ForeignKey(User,on_delete=models.CASCADE,related_name='groupchats',blank=True,null=True)
+    admin = models.ForeignKey(User,on_delete=models.SET_NULL,related_name='groupchats',blank=True,null=True)
     groupchat_name = models.CharField(max_length=100,blank=True,null=True)
-    users_online = models.ForeignKey(User,related_name='online_in_groups',blank=True,null=True,on_delete=models.SET_NULL)
+    users_online = models.ManyToManyField(User,related_name='online_in_groups',blank=True,null=True)
     members = models.ManyToManyField(User,related_name='chat_groups',blank=True)
     is_private = models.BooleanField(default=False)
 
@@ -30,4 +30,3 @@ class GroupMessage(models.Model):
 
     class Meta:
         ordering = ['-created']
-

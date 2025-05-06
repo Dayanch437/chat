@@ -1,6 +1,5 @@
 <span id="online-count" hx-swap-oob="outerHTML"  class="fade-in-scale pr-1">
     {{ online_count }}
-
     <style>
         @keyframes fadeInScale {
             from {
@@ -21,3 +20,20 @@
 {% else %}
 <div id="online-icon" class="gray-dot absolute top-2 left-2 rounded-full bg-gray-500 p-1.5"></div>
 {% endif %}
+<ul id="groupchat-members" hx-swap-oob="outerHTML" class="flex justify-between space-x-10  text-gray-400 gap-2 p-4">
+    {% for member in chat_group.members.all %}
+        <li>
+            <a href="{% url 'profile' member.username %}" class="flex gap-2  justify-end ">
+                <div class="relative">
+                    <img src="{{ member.profile.avatar }}" class="w-14 h-14 rounded-full object-cover">
+                    {% if member in chat_group.users_online.all %}
+                        <div class="green-dot border-2 border-gray-800 absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500"></div>
+                    {% else %}
+                        <div class="gray-dot border-2 border-gray-800 absolute bottom-0 right-0 w-3 h-3 rounded-full bg-gray-500"></div>
+                    {% endif %}
+                </div>
+                {{ member.profile.name|slice:":10" }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
