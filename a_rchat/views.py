@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
@@ -24,7 +26,11 @@ def chat_view(request,chatroom_name='public-chat'):
 
     if chat_group.groupchat_name:
         if request.user not in chat_group.members.all():
-            chat_group.members.add(request.user)
+            if request.user.emailaddress_set.filter(verified=True).exists():
+                chat_group.members.add(request.user)
+            else :
+                messages.warning(request,'You need to verify your email address.')
+                return redirect('profile-emailverify')
 
     if request.htmx:
         form = ChatMessageCreateForm(request.POST)
@@ -89,3 +95,43 @@ def create_chatgroup(request):
             new_group.members.add(request.user)
             return redirect('chatroom',new_group.group_name)
     return render(request,'a_rchat/create_groupchat.html',context)
+
+
+def chatroom_edit_view(request,chatroom_name):
+    chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
+    if request.user != chat_group.admin:
+        raise Http404
+    if request.method == "POST":
+        form = CharRoomEditForm(request.POST, instance=chat_group)
+        if form.is_valid():
+            form.save()
+
+            remove_members = request.POST.getlist('remove_members')
+            for member_id in remove_members:
+                member = User.objects.get(id=member_id)
+                chat_group.members.remove(member)
+
+            return redirect('chatroom',chatroom_name=chatroom_name)
+
+    form = CharRoomEditForm(instance=chat_group)
+    context = {
+        'chat_group':chat_group,
+        'form':form,
+    }
+    return render(request,'a_rchat/chatroom_edit.html',context)
+
+
+
+def chatroom_remove_view(request,chatroom_name):
+    chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
+    if request.user != chat_group.admin:
+        raise Http404
+    if request.method == "POST":
+        chat_group.delete()
+        messages.success(request,'Chat room deleted.')
+        return redirect('home')
+    context = {
+        'chat_group': chat_group,
+    }
+    return render(request,'a_rchat/chatroom_delete.html',context)
+    return render(request,'a_rchat/chatroom_delete.html',context)

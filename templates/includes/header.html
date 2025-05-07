@@ -20,9 +20,16 @@
                      x-transition:enter-start="opacity-0 -translate-y-5 scale-90"
                      x-transition:enter-end="opacity-100 translate-y-0 scale-100">
                     <ul class="hoverlist">
-
-
-                        <li><a href="/">Home</a></li>
+                        <li><a href="{% url 'home' %}">Public chat</a></li>
+                        {% for chatroom in user.chat_groups.all %}
+                            {% if chatroom.groupchat_name %}
+                                    <li>
+                                            <a href="{% url 'chatroom' chatroom.group_name %}">
+                                                {{ chatroom.groupchat_name }}dayanch
+                                            </a>
+                                        </li>
+                            {% endif %}
+                        {% endfor %}
                       {% for chatroom in user.chat_groups.all %}
                             {% if chatroom.is_private %}
                                 {% for member in chatroom.members.all %}

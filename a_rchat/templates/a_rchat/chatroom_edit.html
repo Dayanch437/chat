@@ -1,0 +1,70 @@
+{#{% extends 'layouts/box.html' %}#}
+{##}
+{##}
+{##}
+{#{% block content %}#}
+{##}
+{#    <h1>Edit chat </h1>#}
+{#    <form action="" method="POST">#}
+{#    {% csrf_token %}#}
+{#    {{ form }}#}
+{#    <div class="my-4">#}
+{#        <h2>Members</h2>#}
+{#        {% for member in chat_group.members.all %}#}
+{#        <div class="flex justify-between items-center">#}
+{#            <div class="flex items-center gap-2 py-2">#}
+{#                <img class="w-14 h-14 rounded-full object-cover" src="{{ member.profile.avatar }}">#}
+{#            </div>#}
+{#                <span class="font-bold">{{ member.profile.name }}</span>4#}
+{#                <span class="text-sm font-light text-gray-600">@{{ member.username }}</span>#}
+{#            </div>#}
+{#        </div>#}
+{#        {% if member != chat_group.admin %}#}
+{#            <div class="inline-block pr-4">#}
+{#                <input class="relative" type="checkbox" name="remove_member" value="{{ member.id }}>#}
+{#            </div>#}
+{#        {% endif %}#}
+{##}
+{#        {% endfor %}#}
+{##}
+{#    <button class="mt-2" type="submit">Update</button>#}
+{#    </form>#}
+{##}
+{#{% endblock %}#}
+
+{% extends 'layouts/box.html' %}
+
+{% block content %}
+
+<h1>Edit Chat</h1>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form }}
+
+    <div class="my-4">
+        <h2>Members</h2>
+        {% for member in chat_group.members.all %}
+            <div class="flex justify-between items-center py-2">
+                <div class="flex items-center gap-2">
+                    <img class="w-14 h-14 rounded-full object-cover" src="{{ member.profile.avatar }}">
+                    <div>
+                        <span class="font-bold">{{ member.profile.name }}</span><br>
+                        <span class="text-sm font-light text-gray-600">@{{ member.username }}</span>
+                    </div>
+                </div>
+
+                {% if member != chat_group.admin %}
+                    <div class="inline-block pr-4">
+                        <input class="relative" type="checkbox" name="remove_members" value="{{ member.id }}">
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <button class="mt-2" type="submit">Update</button>
+</form>
+<a class="inline-block flex justify-end" href="{% url 'delete-group' chat_group.group_name %}">
+    Delete group
+</a>
+{% endblock %}
