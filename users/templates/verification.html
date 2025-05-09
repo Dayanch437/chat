@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .email-header {
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .email-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .email-footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>Email Verification</h1>
+        </div>
+        {% autoescape off %}
+        <p>Hi {{ user.username }},</p>
+        <p>Thank you for signing up. Please verify your email address by clicking the link below:</p>
+        <p>
+        http://{{ domain }}/{% url 'account:activate' uidb64=uid token=token %}" class="email-button
+            <a href="http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}" class="email-button">Verify Email</a>
+        </p>
+        <p>If the button above does not work, you can also copy and paste the following link into your browser:</p>
+        <p><a href="http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}">http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}</a></p>
+        <p>If you did not create an account, you can safely ignore this email.</p>
+        <div class="email-footer">
+            <p>&copy; {{ domain }} {{ "now"|date:"Y" }}</p>
+                    {% endautoescape %}z
+
+        </div>
+    </div>
+</body>
+</html>
+
+{##}
+{#{% autoescape off %}#}
+{#    #}
+{#http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}#}
+{#{% endautoescape %}#}
+{##}

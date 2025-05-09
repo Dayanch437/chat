@@ -8,5 +8,4 @@ urlpatterns = [
     path('chat/new_groupchat/',create_chatgroup, name='new-groupchat'),
     path('chat/edit/<chatroom_name>',chatroom_edit_view,name='edit-chatroom'),
     path('chat/delete/<chatroom_name>',chatroom_remove_view,name='delete-group'),
-    path('chat/leave/<chatroom_name>',chatroom_leave_view,name='leave-chatroom'),
 ]
